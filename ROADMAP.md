@@ -6,13 +6,13 @@
 - [x] Add mock data matching `ContextProfile` model
 - [x] Render public context links page
 
-## Phase 2 — Generated Machine Files
-- [ ] Generate `/llms.txt` dynamically from profile
-- [ ] Generate `/context.json`
-- [ ] Generate `/context.md`
-- [ ] Generate `/links.json`
-- [ ] Generate `/proof.json`
-- [ ] Add JSON schema validation
+## Phase 2 — Generated Machine Files ✅
+- [x] Generate `/llms.txt` dynamically from profile
+- [x] Generate `/context.json`
+- [x] Generate `/context.md`
+- [x] Generate `/links.json`
+- [x] Generate `/proof.json`
+- [x] Add JSON schema validation
 
 ## Phase 3 — Editor and Persistence
 - [ ] Add editor UI (`/edit`)
