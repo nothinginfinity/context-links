@@ -1,0 +1,47 @@
+# .github/workflows/deploy.yml
+# Push to main → auto deploy to Cloudflare Pages
+# Requires these GitHub repo secrets:
+#   CLOUDFLARE_API_TOKEN — Cloudflare API token with Pages:Edit permission
+#   CLOUDFLARE_ACCOUNT_ID — your Cloudflare account ID
+
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          # Add any build-time env vars here
+          NODE_ENV: production
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy .next --project-name=context-links --branch=main
+          wranglerVersion: '3'
