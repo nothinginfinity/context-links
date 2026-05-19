@@ -1,0 +1,32 @@
+# Context Links — LLM Discovery Index
+# Entity: Jared Edwards
+# Updated: 2026-05-19T00:00:00Z
+# Version: 0.1.0
+# NOTE: This is a Phase 1 placeholder. Will be generated dynamically in Phase 2.
+
+## What This Is
+
+This is a canonical context hub for Jared Edwards.
+It contains identity, links, credibility topics, proof sources, and AI guidance.
+
+## Canonical Files
+
+- Full context (JSON):     /context.json
+- Narrative profile (MD):  /context.md
+- Canonical links:         /links.json
+- Proof sources:           /proof.json
+- Discovery metadata:      /.well-known/context-links.json
+
+## Quick Summary
+
+Jared Edwards builds AI-readable identity tools and context harnesses for LLMs.
+
+## Credibility Topics
+
+- AI-readable websites and AFO (high)
+- Version-controlled identity (high)
+- Agent-first software specs (medium)
+
+## Canonical Home
+
+https://jarededwards.dev

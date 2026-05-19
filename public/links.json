@@ -1,0 +1,16 @@
+{
+  "_schema": "context-links/links/v1",
+  "_generated": "2026-05-19T00:00:00Z",
+  "_note": "Phase 1 placeholder. Will be generated dynamically in Phase 2.",
+  "profileId": "jared-edwards-01",
+  "displayName": "Jared Edwards",
+  "canonicalLinks": [
+    { "linkId": "lk-01", "label": "Main Website", "url": "https://jarededwards.dev", "kind": "website", "priority": 1, "isCanonical": true, "description": "Primary home base and canonical entity page." },
+    { "linkId": "lk-02", "label": "X / Social Feed", "url": "https://x.com/nothinginfinity", "kind": "social", "priority": 2, "isCanonical": true, "description": "Current thinking, public updates, and agent-facing posts." },
+    { "linkId": "lk-03", "label": "GitHub", "url": "https://github.com/nothinginfinity", "kind": "repository", "priority": 3, "isCanonical": true, "description": "Version-controlled specs, repos, gists, and identity harnesses." },
+    { "linkId": "lk-04", "label": "Newsletter / Updates", "url": "https://jarededwards.substack.com", "kind": "newsletter", "priority": 4, "isCanonical": false, "description": "Long-form updates and project announcements." }
+  ],
+  "verifiedProfiles": [
+    { "profileId": "vp-01", "platform": "GitHub", "handle": "nothinginfinity", "url": "https://github.com/nothinginfinity", "verificationMethod": "github", "verifiedAt": "2025-01-01T00:00:00Z" }
+  ]
+}

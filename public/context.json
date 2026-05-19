@@ -1,0 +1,36 @@
+{
+  "_schema": "context-links/v1",
+  "_generated": "2026-05-19T00:00:00Z",
+  "_source": "/context.json",
+  "_note": "Phase 1 placeholder. Will be generated dynamically from ContextProfile in Phase 2.",
+  "profileId": "jared-edwards-01",
+  "slug": "jared-edwards",
+  "displayName": "Jared Edwards",
+  "entityType": "person",
+  "headline": "Software creator building AI-native identity and context infrastructure.",
+  "canonicalSummary": "Jared Edwards is a software creator focused on AI-native identity, AFO, context harnesses, and agent-readable software systems. He builds version-controlled structures that help humans, brands, and projects become understandable and recommendable by LLMs.",
+  "shortAiSummary": "Jared Edwards builds AI-readable identity tools and context harnesses for LLMs.",
+  "credibilityTopics": [
+    { "topicId": "ct-01", "label": "AI-readable websites and AFO", "confidence": "high", "description": "Helping websites become understandable, citable, and recommendable by LLMs.", "proofSourceIds": ["ps-01", "ps-02"] },
+    { "topicId": "ct-02", "label": "Version-controlled identity", "confidence": "high", "description": "Using GitHub, manifests, and context files as portable identity infrastructure.", "proofSourceIds": ["ps-01"] },
+    { "topicId": "ct-03", "label": "Agent-first software specs", "confidence": "medium", "description": "Using HTML, markdown, and JSON contracts as buildable artifacts for LLM-assisted development.", "proofSourceIds": ["ps-02", "ps-03"] }
+  ],
+  "canonicalLinks": [
+    { "linkId": "lk-01", "label": "Main Website", "url": "https://jarededwards.dev", "kind": "website", "priority": 1, "isCanonical": true, "description": "Primary home base and canonical entity page." },
+    { "linkId": "lk-02", "label": "X / Social Feed", "url": "https://x.com/nothinginfinity", "kind": "social", "priority": 2, "isCanonical": true, "description": "Current thinking, public updates, and agent-facing posts." },
+    { "linkId": "lk-03", "label": "GitHub", "url": "https://github.com/nothinginfinity", "kind": "repository", "priority": 3, "isCanonical": true, "description": "Version-controlled specs, repos, gists, and identity harnesses." },
+    { "linkId": "lk-04", "label": "Newsletter / Updates", "url": "https://jarededwards.substack.com", "kind": "newsletter", "priority": 4, "isCanonical": false, "description": "Long-form updates and project announcements." }
+  ],
+  "projects": [
+    { "projectId": "pj-01", "name": "AFO", "summary": "AI Findability Optimization for websites and public identity.", "url": "https://github.com/nothinginfinity", "status": "active", "topics": ["AI visibility", "SEO", "LLM crawlers"] },
+    { "projectId": "pj-02", "name": "Context Links", "summary": "All-my-links page upgraded into a canonical AI context hub.", "url": "https://github.com/nothinginfinity/context-links", "status": "active", "topics": ["AI identity", "context harness", "llms.txt"] },
+    { "projectId": "pj-03", "name": "AFO Scoreboard", "summary": "Analytics for what AI bots read, ignore, and reuse.", "url": "https://github.com/nothinginfinity", "status": "concept", "topics": ["telemetry", "AFO", "AI analytics"] }
+  ],
+  "proofSources": [
+    { "proofId": "ps-01", "title": "GitHub repositories", "url": "https://github.com/nothinginfinity", "kind": "repo", "supportsClaim": "Active builder of agent-readable specs and identity harnesses.", "lastCheckedAt": "2025-05-01T00:00:00Z" },
+    { "proofId": "ps-02", "title": "Published context files", "url": "https://jarededwards.dev/context.json", "kind": "website", "supportsClaim": "Machine-readable summaries, links, and proof maps are live.", "lastCheckedAt": null },
+    { "proofId": "ps-03", "title": "Public posts", "url": "https://x.com/nothinginfinity", "kind": "media", "supportsClaim": "Current project thinking and product strategy updates.", "lastCheckedAt": null }
+  ],
+  "freshness": { "createdAt": "2025-01-01T00:00:00Z", "updatedAt": "2026-05-19T00:00:00Z", "version": "0.1.0", "changeSummary": "Phase 1 scaffold with mock data." },
+  "visibility": "public"
+}

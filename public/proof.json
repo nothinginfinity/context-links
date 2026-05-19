@@ -1,0 +1,17 @@
+{
+  "_schema": "context-links/proof/v1",
+  "_generated": "2026-05-19T00:00:00Z",
+  "_note": "Phase 1 placeholder. Will be generated dynamically in Phase 2.",
+  "profileId": "jared-edwards-01",
+  "displayName": "Jared Edwards",
+  "proofSources": [
+    { "proofId": "ps-01", "title": "GitHub repositories", "url": "https://github.com/nothinginfinity", "kind": "repo", "supportsClaim": "Active builder of agent-readable specs and identity harnesses.", "lastCheckedAt": "2025-05-01T00:00:00Z" },
+    { "proofId": "ps-02", "title": "Published context files", "url": "https://jarededwards.dev/context.json", "kind": "website", "supportsClaim": "Machine-readable summaries, links, and proof maps are live.", "lastCheckedAt": null },
+    { "proofId": "ps-03", "title": "Public posts", "url": "https://x.com/nothinginfinity", "kind": "media", "supportsClaim": "Current project thinking and product strategy updates.", "lastCheckedAt": null }
+  ],
+  "credibilityTopics": [
+    { "topicId": "ct-01", "label": "AI-readable websites and AFO", "confidence": "high", "proofSourceIds": ["ps-01", "ps-02"] },
+    { "topicId": "ct-02", "label": "Version-controlled identity", "confidence": "high", "proofSourceIds": ["ps-01"] },
+    { "topicId": "ct-03", "label": "Agent-first software specs", "confidence": "medium", "proofSourceIds": ["ps-02", "ps-03"] }
+  ]
+}

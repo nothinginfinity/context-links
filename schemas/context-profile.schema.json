@@ -1,0 +1,88 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "context-links/context-profile/v1",
+  "title": "ContextProfile",
+  "description": "Canonical identity and context object for a Context Links profile.",
+  "type": "object",
+  "required": ["profileId", "slug", "displayName", "entityType", "headline", "canonicalSummary", "visibility"],
+  "properties": {
+    "profileId":            { "type": "string" },
+    "slug":                 { "type": "string" },
+    "displayName":          { "type": "string" },
+    "entityType":           { "type": "string", "enum": ["person","brand","business","project","organization"] },
+    "headline":             { "type": "string" },
+    "canonicalSummary":     { "type": "string" },
+    "shortAiSummary":       { "type": "string" },
+    "preferredDescription": { "type": "string" },
+    "visibility":           { "type": "string", "enum": ["public","unlisted","private"] },
+    "credibilityTopics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["topicId","label","confidence","description"],
+        "properties": {
+          "topicId":        { "type": "string" },
+          "label":          { "type": "string" },
+          "confidence":     { "type": "string", "enum": ["high","medium","exploratory"] },
+          "description":    { "type": "string" },
+          "proofSourceIds": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "canonicalLinks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["linkId","label","url","kind","priority","isCanonical"],
+        "properties": {
+          "linkId":      { "type": "string" },
+          "label":       { "type": "string" },
+          "url":         { "type": "string", "format": "uri" },
+          "kind":        { "type": "string", "enum": ["website","social","newsletter","store","repository","portfolio","booking","document","other"] },
+          "priority":    { "type": "number" },
+          "isCanonical": { "type": "boolean" },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "projects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["projectId","name","summary","status"],
+        "properties": {
+          "projectId": { "type": "string" },
+          "name":      { "type": "string" },
+          "summary":   { "type": "string" },
+          "url":       { "type": "string", "format": "uri" },
+          "status":    { "type": "string", "enum": ["active","paused","archived","concept"] },
+          "topics":    { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "proofSources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["proofId","title","url","kind","supportsClaim"],
+        "properties": {
+          "proofId":       { "type": "string" },
+          "title":         { "type": "string" },
+          "url":           { "type": "string", "format": "uri" },
+          "kind":          { "type": "string", "enum": ["article","repo","website","credential","customer","case_study","publication","media","other"] },
+          "supportsClaim": { "type": "string" },
+          "lastCheckedAt": { "type": ["string","null"] }
+        }
+      }
+    },
+    "freshness": {
+      "type": "object",
+      "properties": {
+        "createdAt":     { "type": "string", "format": "date-time" },
+        "updatedAt":     { "type": "string", "format": "date-time" },
+        "version":       { "type": "string" },
+        "changeSummary": { "type": "string" }
+      }
+    }
+  }
+}

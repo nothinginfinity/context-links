@@ -1,0 +1,16 @@
+{
+  "_schema": "context-links/discovery/v1",
+  "_generated": "2026-05-19T00:00:00Z",
+  "version": "0.1.0",
+  "profileId": "jared-edwards-01",
+  "displayName": "Jared Edwards",
+  "publicPage": "/",
+  "contextFiles": [
+    { "path": "/llms.txt",    "format": "text/plain",       "purpose": "LLM discovery index" },
+    { "path": "/context.json", "format": "application/json", "purpose": "Canonical machine context object" },
+    { "path": "/context.md",  "format": "text/markdown",    "purpose": "LLM-readable narrative profile" },
+    { "path": "/links.json",  "format": "application/json", "purpose": "Canonical links and verified profiles" },
+    { "path": "/proof.json",  "format": "application/json", "purpose": "Proof sources and claim mapping" }
+  ],
+  "updatedAt": "2026-05-19T00:00:00Z"
+}
