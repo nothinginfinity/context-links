@@ -1,0 +1,11 @@
+# wrangler.toml — context-links Cloudflare Pages config
+# D1 database binding for ContextProfile persistence
+
+name = "context-links"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"           # accessed as env.DB in route handlers
+database_name = "context-links-db"
+database_id = "228546e2-992a-4c7f-9248-41d45aafc0f7"

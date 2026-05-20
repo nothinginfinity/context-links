@@ -1,13 +1,23 @@
 // app/proof.json/route.ts
-// data-spec-source: #file-output-spec /proof.json
-
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { getProfileBySlug, type Env } from '@/lib/db';
 import { mockProfile } from '@/lib/mock-data';
 import { generateProofJson } from '@/lib/generators/proof-json';
 
-export async function GET() {
-  const content = generateProofJson(mockProfile);
-  return new NextResponse(content, {
+export const runtime = 'edge';
+
+export async function GET(request: NextRequest) {
+  let profile = mockProfile;
+
+  try {
+    const env = process.env as unknown as Env;
+    if (env.DB) {
+      const dbProfile = await getProfileBySlug(env.DB, 'jared-edwards');
+      if (dbProfile) profile = dbProfile;
+    }
+  } catch (_) {}
+
+  return new NextResponse(generateProofJson(profile), {
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
       'Cache-Control': 'public, max-age=3600',
