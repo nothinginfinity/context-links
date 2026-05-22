@@ -1,159 +1,174 @@
-// app/page.tsx — PublicContextPage
-// data-spec-component: AppShell
-// data-spec-source: GET /api/context-profile
+// app/page.tsx
+// Wired to context-links-api — GET /links (grid) + GET /links/:slug (detail)
+// Mock data retained as fallback during dev (set USE_MOCK=true or if API is unreachable)
 
-import { mockProfile, mockAnalytics, mockAiGuidance } from '@/lib/mock-data';
-import TopNavigation from '@/components/TopNavigation';
-import HeroPanel from '@/components/HeroPanel';
-import ProfileCard from '@/components/ProfileCard';
-import LinkGrid from '@/components/LinkGrid';
-import CredibilityTopics from '@/components/CredibilityTopics';
-import AiSummaryPanel from '@/components/AiSummaryPanel';
-import ProjectList from '@/components/ProjectList';
-import ProofPanel from '@/components/ProofPanel';
-import RelevantQueryList from '@/components/RelevantQueryList';
-import MachineFileList from '@/components/MachineFileList';
-import AnalyticsPreview from '@/components/AnalyticsPreview';
+const API_BASE = "https://context-links-api.agentfeedoptimization.com";
+const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
 
-export default function PublicContextPage() {
-  const profile = mockProfile;
-  const analytics = mockAnalytics;
-  const aiGuidance = mockAiGuidance;
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+export interface ContextLink {
+  id: number;
+  link_id: string;
+  slug: string;
+  destination_url: string;
+  template_type: "ai-prompt" | "landing-brief" | "data-ref" | "agent-boot";
+  context_payload: Record<string, unknown>;
+  click_count: number;
+  user_id: number | null;
+  created_at: string;
+  updated_at: string;
+  share_url?: string;
+}
+
+export interface LinksResponse {
+  links: ContextLink[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
+// ─── Mock data (fallback) ─────────────────────────────────────────────────────
+
+const MOCK_LINKS: ContextLink[] = [
+  {
+    id: 1,
+    link_id: "lnk_mock001",
+    slug: "example-ai-prompt",
+    destination_url: "https://agentfeedoptimization.com",
+    template_type: "ai-prompt",
+    context_payload: { prompt: "Explain AFO to a developer" },
+    click_count: 12,
+    user_id: null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: 2,
+    link_id: "lnk_mock002",
+    slug: "example-landing-brief",
+    destination_url: "https://agentfeedoptimization.com/pricing",
+    template_type: "landing-brief",
+    context_payload: { headline: "AI-native link infrastructure", audience: "developers" },
+    click_count: 4,
+    user_id: null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+];
+
+const MOCK_LINKS_RESPONSE: LinksResponse = {
+  links: MOCK_LINKS,
+  total: MOCK_LINKS.length,
+  limit: 50,
+  offset: 0,
+};
+
+// ─── Data fetchers ─────────────────────────────────────────────────────────────
+
+/**
+ * Fetch all links for the grid.
+ * Falls back to mock data if USE_MOCK=true or the API is unreachable.
+ */
+export async function getLinks(
+  opts: { limit?: number; offset?: number; template?: string } = {}
+): Promise<LinksResponse> {
+  if (USE_MOCK) return MOCK_LINKS_RESPONSE;
+
+  try {
+    const params = new URLSearchParams();
+    if (opts.limit) params.set("limit", String(opts.limit));
+    if (opts.offset) params.set("offset", String(opts.offset));
+    if (opts.template) params.set("template", opts.template);
+
+    const res = await fetch(`${API_BASE}/links?${params}`, {
+      next: { revalidate: 30 }, // ISR — revalidate every 30s
+    });
+
+    if (!res.ok) throw new Error(`API error ${res.status}`);
+    return res.json();
+  } catch (e) {
+    console.warn("[context-links] getLinks fell back to mock:", e);
+    return MOCK_LINKS_RESPONSE;
+  }
+}
+
+/**
+ * Fetch a single link by slug.
+ * Falls back to mock data if USE_MOCK=true or the API is unreachable.
+ */
+export async function getLinkBySlug(slug: string): Promise<ContextLink | null> {
+  if (USE_MOCK) {
+    return MOCK_LINKS.find((l) => l.slug === slug) ?? null;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/links/${slug}`, {
+      headers: { Accept: "application/json" },
+      next: { revalidate: 30 },
+    });
+
+    if (res.status === 404) return null;
+    if (!res.ok) throw new Error(`API error ${res.status}`);
+    return res.json();
+  } catch (e) {
+    console.warn(`[context-links] getLinkBySlug(${slug}) fell back to mock:`, e);
+    return MOCK_LINKS.find((l) => l.slug === slug) ?? null;
+  }
+}
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
+
+export default async function HomePage() {
+  const { links } = await getLinks({ limit: 50 });
 
   return (
-    <div
-      className="shell"
-      style={{
-        width: 'min(1180px, calc(100% - 32px))',
-        margin: '0 auto',
-        padding: '28px 0 56px',
-      }}
-      data-spec-component="AppShell"
-    >
-      <TopNavigation />
+    <main className="p-8">
+      {links.length === 0 ? (
+        <p className="text-gray-500">No links yet. Create your first one.</p>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {links.map((link) => (
+            <LinkCard key={link.link_id} link={link} />
+          ))}
+        </div>
+      )}
+    </main>
+  );
+}
 
-      <main>
-        {/* Hero row: HeroPanel + ProfileCard */}
-        <section
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'minmax(0,1.16fr) minmax(330px,0.84fr)',
-            gap: '22px',
-            alignItems: 'stretch',
-            marginBottom: '22px',
-          }}
-        >
-          <HeroPanel profile={profile} />
-          <ProfileCard profile={profile} healthScore={analytics.contextHealthScore} />
-        </section>
+// ─── Link card component ───────────────────────────────────────────────────────
 
-        {/* Links + Credibility */}
-        <section
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)',
-            gap: '22px',
-            marginBottom: '22px',
-          }}
-        >
-          <LinkGrid links={profile.canonicalLinks} />
-          <CredibilityTopics topics={profile.credibilityTopics} />
-        </section>
+function LinkCard({ link }: { link: ContextLink }) {
+  const shareUrl = link.share_url ?? `${API_BASE}/links/${link.slug}`;
 
-        {/* AI Summary */}
-        <AiSummaryPanel summary={aiGuidance.preferredSummary} />
-
-        {/* Projects + Proof + Queries */}
-        <section
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3,minmax(0,1fr))',
-            gap: '22px',
-            marginTop: '22px',
-            marginBottom: '22px',
-          }}
-        >
-          <ProjectList projects={profile.projects} />
-          <ProofPanel proofSources={profile.proofSources} />
-          <RelevantQueryList queries={profile.relevantQueries} />
-        </section>
-
-        {/* Machine files */}
-        <MachineFileList />
-
-        {/* Analytics + Recommendation Guidance */}
-        <section
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)',
-            gap: '22px',
-            marginTop: '22px',
-          }}
-        >
-          <AnalyticsPreview analytics={analytics} />
-          <div
-            className="card"
-            style={{ padding: '24px' }}
-            data-spec-component="RecommendationGuidancePanel"
-          >
-            <div style={{ marginBottom: '18px' }}>
-              <h3 style={{ margin: 0, fontSize: '20px', letterSpacing: '-0.04em' }}>
-                Recommendation Guidance
-              </h3>
-              <p style={{ marginTop: '5px', color: 'var(--muted)', fontSize: '13px' }}>
-                When AI systems should or should not recommend this entity.
-              </p>
-            </div>
-            <div style={{ display: 'grid', gap: '10px' }}>
-              {profile.recommendationGuidance.shouldRecommendWhen.map((s, i) => (
-                <div
-                  key={i}
-                  style={{
-                    padding: '12px 14px',
-                    borderRadius: '14px',
-                    border: '1px solid rgba(53,242,166,0.18)',
-                    background: 'rgba(53,242,166,0.05)',
-                    fontSize: '13px',
-                    color: 'var(--soft)',
-                    lineHeight: 1.5,
-                  }}
-                >
-                  ✓ {s}
-                </div>
-              ))}
-              {profile.recommendationGuidance.shouldNotRecommendWhen.map((s, i) => (
-                <div
-                  key={i}
-                  style={{
-                    padding: '12px 14px',
-                    borderRadius: '14px',
-                    border: '1px solid rgba(255,107,107,0.18)',
-                    background: 'rgba(255,107,107,0.05)',
-                    fontSize: '13px',
-                    color: 'var(--muted)',
-                    lineHeight: 1.5,
-                  }}
-                >
-                  ✗ {s}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <style>{`
-        @media (max-width: 980px) {
-          section[style*="1.16fr"],
-          section[style*="repeat(3"],
-          section[style*="1fr) minmax(0,1fr)"] {
-            grid-template-columns: 1fr !important;
-          }
-        }
-        @media (max-width: 640px) {
-          .shell { padding-top: 18px !important; }
-        }
-      `}</style>
+  return (
+    <div className="rounded-lg border border-gray-200 p-4 flex flex-col gap-2">
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+          {link.template_type}
+        </span>
+        <span className="text-xs text-gray-400">{link.click_count} clicks</span>
+      </div>
+      <p className="font-mono text-sm text-gray-800">/{link.slug}</p>
+      <p className="text-xs text-gray-500 truncate">{link.destination_url}</p>
+      <CopyButton text={shareUrl} />
     </div>
+  );
+}
+
+// ─── Copy button (client component) ───────────────────────────────────────────
+// Split into components/CopyButton.tsx if linter complains about mixing server/client.
+
+"use client";
+
+function CopyButton({ text }: { text: string }) {
+  return (
+    <button
+      onClick={() => navigator.clipboard.writeText(text)}
+      className="text-xs text-gray-500 hover:text-gray-800 border border-gray-200 rounded px-2 py-1"
+    >
+      Copy link
+    </button>
   );
 }
