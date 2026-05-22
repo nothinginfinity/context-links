@@ -1,34 +1,33 @@
-# ROADMAP — Context Links
+# Roadmap — Context Links
 
-## Phase 1 — Static Spec to Public Page ✅
-- [x] Create Next.js app shell
-- [x] Convert HTML spec into reusable components
-- [x] Add mock data matching `ContextProfile` model
-- [x] Render public context links page
+## Phase 1 — Static Prototype
 
-## Phase 2 — Generated Machine Files ✅
-- [x] Generate `/llms.txt` dynamically from profile
-- [x] Generate `/context.json`
-- [x] Generate `/context.md`
-- [x] Generate `/links.json`
-- [x] Generate `/proof.json`
-- [x] Add JSON schema validation
+- [ ] Public homepage showing the 5 output file types
+- [ ] Mock generator UI
+- [ ] Sample output files for agentfeedoptimization.com
+- [ ] `specs/context-links.spec.html` added
 
-## Phase 3 — Editor and Persistence
-- [ ] Add editor UI (`/edit`)
-- [ ] Add Cloudflare D1 schema
-- [ ] Persist profile, links, topics, projects, and proof
-- [ ] Add publish/update flow
+## Phase 2 — Data Models + Mock API
 
-## Phase 4 — Bot Read Telemetry
-- [ ] Add Cloudflare Worker middleware
-- [ ] Detect bot reads vs. human reads
-- [ ] Hash IP/user-agent values
-- [ ] Store `ContextReadEvent` records
-- [ ] Show analytics summary in `/analytics`
+- [ ] TypeScript models: ContextProfile, LinkEntry, ProofRecord
+- [ ] Mock API routes: POST /generate, GET /profile/:domain
+- [ ] Output file schemas in `schemas/`
 
-## Phase 5 — AFO Integration
-- [ ] Connect to AFO Scoreboard
-- [ ] Add context health score computation
-- [ ] Add recommendations for weak context objects
-- [ ] Support GitHub sync/versioning
+## Phase 3 — Cloudflare Backend
+
+- [ ] Worker: `context-links-api`
+- [ ] D1: context_profiles, link_entries, proof_records
+- [ ] Crawler Worker (fetch + parse target URL)
+- [ ] Workers AI: entity extraction from crawled content
+
+## Phase 4 — Auto-Deploy
+
+- [ ] One-click deploy to Cloudflare Worker on customer domain
+- [ ] Context file CDN serving via Worker routes
+- [ ] Scheduled refresh (re-crawl + regenerate on schedule)
+
+## Phase 5 — AFO Scoreboard Integration
+
+- [ ] Track LLM crawler hits on deployed context files
+- [ ] Score context file health (completeness, freshness)
+- [ ] Surface recommendations in AFO dashboard
