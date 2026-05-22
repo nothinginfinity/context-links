@@ -1,6 +1,6 @@
-// app/page.tsx
-// Wired to context-links-api — GET /links (grid) + GET /links/:slug (detail)
-// Mock data retained as fallback during dev (set USE_MOCK=true or if API is unreachable)
+// app/page.tsx — server component, no "use client"
+
+import { CopyButton } from "@/components/CopyButton";
 
 const API_BASE = "https://context-links-api.agentfeedoptimization.com";
 const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
@@ -66,10 +66,6 @@ const MOCK_LINKS_RESPONSE: LinksResponse = {
 
 // ─── Data fetchers ─────────────────────────────────────────────────────────────
 
-/**
- * Fetch all links for the grid.
- * Falls back to mock data if USE_MOCK=true or the API is unreachable.
- */
 export async function getLinks(
   opts: { limit?: number; offset?: number; template?: string } = {}
 ): Promise<LinksResponse> {
@@ -82,7 +78,7 @@ export async function getLinks(
     if (opts.template) params.set("template", opts.template);
 
     const res = await fetch(`${API_BASE}/links?${params}`, {
-      next: { revalidate: 30 }, // ISR — revalidate every 30s
+      next: { revalidate: 30 },
     });
 
     if (!res.ok) throw new Error(`API error ${res.status}`);
@@ -93,14 +89,8 @@ export async function getLinks(
   }
 }
 
-/**
- * Fetch a single link by slug.
- * Falls back to mock data if USE_MOCK=true or the API is unreachable.
- */
 export async function getLinkBySlug(slug: string): Promise<ContextLink | null> {
-  if (USE_MOCK) {
-    return MOCK_LINKS.find((l) => l.slug === slug) ?? null;
-  }
+  if (USE_MOCK) return MOCK_LINKS.find((l) => l.slug === slug) ?? null;
 
   try {
     const res = await fetch(`${API_BASE}/links/${slug}`, {
@@ -137,7 +127,7 @@ export default async function HomePage() {
   );
 }
 
-// ─── Link card component ───────────────────────────────────────────────────────
+// ─── Link card (server — CopyButton handles the client boundary) ──────────────
 
 function LinkCard({ link }: { link: ContextLink }) {
   const shareUrl = link.share_url ?? `${API_BASE}/links/${link.slug}`;
@@ -154,21 +144,5 @@ function LinkCard({ link }: { link: ContextLink }) {
       <p className="text-xs text-gray-500 truncate">{link.destination_url}</p>
       <CopyButton text={shareUrl} />
     </div>
-  );
-}
-
-// ─── Copy button (client component) ───────────────────────────────────────────
-// Split into components/CopyButton.tsx if linter complains about mixing server/client.
-
-"use client";
-
-function CopyButton({ text }: { text: string }) {
-  return (
-    <button
-      onClick={() => navigator.clipboard.writeText(text)}
-      className="text-xs text-gray-500 hover:text-gray-800 border border-gray-200 rounded px-2 py-1"
-    >
-      Copy link
-    </button>
   );
 }
